@@ -10,6 +10,11 @@
 
 #define BILLION  1000000000L;
 
+
+
+//https://beej.us/guide/bgipc/html/multi/unixsock.html
+
+
 int main(void){
     int sv[2]; /* the pair of socket descriptors */
     char buf; /* for data exchange between processes */
@@ -28,28 +33,36 @@ int main(void){
     }
 
 
-
-    for (int i=0; i<1000000;i++){
+    // for (int i=0; i<1000000;i++){
         // if (i%100000==0){
         //     printf("%d\n",i);
         // }
         if (!fork()) {  /* child */
-            read(sv[1], &buf, 1);
-            // printf("child: read '%c'\n", buf);
-            buf = toupper(buf);  /* make it uppercase */
-            write(sv[1], &buf, 1);
-            // printf("child: sent '%c'\n", buf);
-            exit(0);
+           
+           for(int i=0; i<1000000;i++){
+                read(sv[1], &buf, 1);
+                // printf("child: read '%c'\n", buf);
+                buf = toupper(buf);  /* make it uppercase */
+                write(sv[1], &buf, 1);
+                // printf("child: sent '%c'\n", buf);
+           }
+           exit(0);
 
         } else { /* parent */
-            write(sv[0], "b", 1);
-            // printf("parent: sent 'b'\n");
-            read(sv[0], &buf, 1);
-            // printf("parent: read '%c'\n", buf);
-            wait(NULL); /* wait for child to die */
+
+            for(int i=0; i<1000000;i++){
+                write(sv[0], "b", 1);
+                // printf("parent: sent 'b'\n");
+                read(sv[0], &buf, 1);
+                // printf("parent: read '%c'\n", buf);
+               
+               
+            }
+             wait(NULL); /* wait for child to die */
+            
             
         }
-    }
+    // }
     if( clock_gettime( CLOCK_REALTIME, &stop) == -1 ){
         perror( "clock gettime" );
         return -1;
