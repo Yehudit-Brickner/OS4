@@ -55,17 +55,8 @@ int main(){
         return -1;
     }
     for (int i=0; i<1000000; i++){
-        // if (i%100000==0){
-        //     printf("%d\n",i);
-        // }
-        // Create thread 1
         pthread_create(&tid1, NULL, foo, NULL);
-        // sleep for 0.01 sec so that thread 1
-        // would get a chance to run first
-        // sleep(0.01);
-        // Create thread 2
         pthread_create(&tid2, NULL, foo, NULL);
-        // wait for the completion of thread 2
         pthread_join(tid2, NULL);
     }
 
@@ -76,6 +67,4 @@ int main(){
     accum = ( stop.tv_sec - start.tv_sec )+ (double)( stop.tv_nsec - start.tv_nsec ) / (double)BILLION;
     printf( "cond took %lf seconds \n", accum );
     return 0;
-
-	return 0;
 }
